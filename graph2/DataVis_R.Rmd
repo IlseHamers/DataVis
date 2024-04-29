@@ -1,0 +1,111 @@
+---
+title: "DataVis graphs"
+author: "Ilse Hamers"
+date: "2024-04-25"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## packages
+```{r}
+library(dplyr)
+library(ggplot2)
+```
+
+
+## loading data
+```{r}
+purchases <- read.csv("C:\\Users\\ilseh\\Desktop\\DataVis\\suncharge-main\\suncharge-main\\data\\Purchases.csv")
+
+```
+
+## scatterplots
+
+```{r}
+# Initialize lists to store summary data
+goods_receipt_summary_data_list <- list()
+arrival_summary_data_list <- list()
+shipment_summary_data_list <- list()
+
+# Get unique MaterialPlantKeys
+unique_material_plant_keys <- unique(purchases$MaterialPlantKey)
+
+# Loop over each MaterialPlantKey
+for (key in unique_material_plant_keys) {
+  # Subset data for the current MaterialPlantKey
+  subset_data <- subset(purchases, MaterialPlantKey == key)
+  
+  # Convert dates to Date type
+  subset_data$ActualGoodsReceiptDate <- as.Date(subset_data$ActualGoodsReceiptDate)
+  subset_data$PlannedGoodsReceiptDate <- as.Date(subset_data$PlannedGoodsReceiptDate)
+  subset_data$ActualArrivalDate <- as.Date(subset_data$ActualArrivalDate)
+  subset_data$PlannedArrivalDate <- as.Date(subset_data$PlannedArrivalDate)
+  subset_data$ActualVendorShipmentDate <- as.Date(subset_data$ActualVendorShipmentDate)
+  subset_data$PlannedVendorShipmentDate <- as.Date(subset_data$PlannedVendorShipmentDate)
+  
+  # Calculate the difference between actual and planned goods receipt dates
+  subset_data <- mutate(subset_data, GoodsReceiptDateDifference = ActualGoodsReceiptDate - PlannedGoodsReceiptDate)
+  
+  # Calculate the difference between actual and planned arrival dates
+  subset_data <- mutate(subset_data, ArrivalDateDifference = ActualArrivalDate - PlannedArrivalDate)
+  
+  # Calculate the difference between actual and planned vendor shipment dates
+  subset_data <- mutate(subset_data, VendorShipmentDateDifference = ActualVendorShipmentDate - PlannedVendorShipmentDate)
+  
+  # Group by date and calculate mean difference for goods receipt dates
+  goods_receipt_summary_data <- subset_data %>%
+    group_by(ActualGoodsReceiptDate) %>%
+    summarise(MeanGoodsReceiptDifference = mean(GoodsReceiptDateDifference, na.rm = TRUE))
+  
+  # Group by date and calculate mean difference for arrival dates
+  arrival_summary_data <- subset_data %>%
+    group_by(ActualArrivalDate) %>%
+    summarise(MeanArrivalDifference = mean(ArrivalDateDifference, na.rm = TRUE))
+  
+  # Group by date and calculate mean difference for vendor shipment dates
+  shipment_summary_data <- subset_data %>%
+    group_by(ActualVendorShipmentDate) %>%
+    summarise(MeanShipmentDifference = mean(VendorShipmentDateDifference, na.rm = TRUE))
+  
+  # Store summary data frames in the respective lists
+  goods_receipt_summary_data_list[[paste0("MaterialPlantKey_", key)]] <- goods_receipt_summary_data
+  arrival_summary_data_list[[paste0("MaterialPlantKey_", key)]] <- arrival_summary_data
+  shipment_summary_data_list[[paste0("MaterialPlantKey_", key)]] <- shipment_summary_data
+
+  # Visualize mean difference for goods receipt dates
+  print(
+    ggplot(goods_receipt_summary_data, aes(x = ActualGoodsReceiptDate, y = MeanGoodsReceiptDifference)) +
+      geom_point(alpha = 0.6, color = "#ffa50099") +
+      geom_smooth(method = "lm", se = FALSE, color = "#ff4b0099") +
+      labs(x = "Date", y = "Mean Difference Goods Receipt Dates") +
+      ggtitle(paste(key, ": Mean Difference Actual and Planned Goods Receipt Dates")) +
+      theme_minimal()
+  )
+  
+  # Visualize mean difference for arrival dates
+  print(
+    ggplot(arrival_summary_data, aes(x = ActualArrivalDate, y = MeanArrivalDifference)) +
+      geom_point(alpha = 0.6, color = "#ffa50099") +
+      geom_smooth(method = "lm", se = FALSE, color = "#ff4b0099") +
+      labs(x = "Date", y = "Mean Difference Arrival Dates") +
+      ggtitle(paste(key, ": Mean Difference Actual and Planned Arrival Dates")) +
+      theme_minimal()
+  )
+  
+  # Visualize mean difference for vendor shipment dates
+  print(
+    ggplot(shipment_summary_data, aes(x = ActualVendorShipmentDate, y = MeanShipmentDifference)) +
+      geom_point(alpha = 0.6, color = "#ffa50099") +
+      geom_smooth(method = "lm", se = FALSE, color = "#ff4b0099") +
+      labs(x = "Date", y = "Mean Difference Vendor Shipment Dates") +
+      ggtitle(paste(key, ": Mean Difference Actual and Planned Vendor Shipment Dates")) +
+      theme_minimal()
+  )
+}
+
+```
+
+
