@@ -1,0 +1,134 @@
+---
+title: "DataVis_part5"
+author: "Ilse Hamers"
+date: "2024-05-13"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(dplyr)
+library(ggplot2)
+library(gridExtra)
+```
+
+## loading data
+```{r}
+purchases <- read.csv("C:\\Users\\ilseh\\Desktop\\DataVis\\suncharge-main\\suncharge-main\\data\\Purchases.csv")
+forecast <- read.csv("C:\\Users\\ilseh\\Desktop\\DataVis\\suncharge-main\\suncharge-main\\data\\Forecast.csv")
+sales <- read.csv("C:\\Users\\ilseh\\Desktop\\DataVis\\suncharge-main\\suncharge-main\\data\\Sales.csv")
+mpr <- read.csv("C:\\Users\\ilseh\\Desktop\\DataVis\\suncharge-main\\suncharge-main\\data\\MaterialPlantRelation.csv")
+```
+
+## Forecast vs sales total
+
+```{r}
+grouped_data <- forecast %>%
+  group_by(MaterialKey, RequestedDeliveryMonth) %>%
+  filter(RequestedDeliveryMonth < as.Date("2025-02-01")) %>%
+  summarise(Quantity = sum(Quantity)) %>%
+  ungroup()
+
+ggplot(grouped_data, aes(x = RequestedDeliveryMonth, y = Quantity, color = factor(MaterialKey))) +
+  geom_point() +
+  labs(title = "Forecast: Quantity per MaterialKey Over Delivery Months",
+       x = "Requested Delivery Month",
+       y = "Quantity", color = 'MaterialKey') +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  ylim(0, 55000) +
+  scale_x_discrete(labels = function(x) ifelse(seq_along(x) %% 2 == 0, "", x))
+
+# Convert RequestedDeliveryDate to year and month
+grouped_data <- sales %>%
+  mutate(RequestedDeliveryDate = as.Date(RequestedDeliveryDate, format = "%Y-%m-%d"), # Ensure date format
+         YearMonth = format(RequestedDeliveryDate, "%Y-%m")) %>%
+  group_by(MaterialKey, YearMonth) %>%
+  summarise(OrderQuantity = sum(OrderQuantity)) %>%
+  ungroup()
+
+# Plotting
+ggplot(grouped_data, aes(x = YearMonth, y = OrderQuantity, color = factor(MaterialKey))) +
+  geom_point() +
+  labs(title = "Sales: OrderQuantity per MaterialKey Over Delivery Months",
+       x = "Requested Delivery Month",
+       y = "Quantity", color = 'MaterialKey') +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  ylim(0, 55000) +
+  scale_x_discrete(labels = function(x) ifelse(seq_along(x) %% 2 == 0, "", x))
+
+
+
+```
+## forecast vs sales per plant
+```{r}
+grouped_data_sales <- sales %>%
+  mutate(RequestedDeliveryDate = as.Date(RequestedDeliveryDate, format = "%Y-%m-%d"), # Ensure date format
+         YearMonth = format(RequestedDeliveryDate, "%Y-%m")) %>%
+  group_by(MaterialKey, YearMonth, PlantKey) %>%
+  summarise(OrderQuantity = sum(OrderQuantity)) %>%
+  ungroup()
+
+# Convert RequestedDeliveryMonth to year and month for forecast data
+grouped_data_forecast <- forecast %>%
+  mutate(RequestedDeliveryMonth = as.Date(RequestedDeliveryMonth, format = "%Y-%m-%d")) %>% # Ensure date format
+  filter(RequestedDeliveryMonth < as.Date("2025-02-01")) %>%
+  group_by(MaterialKey, RequestedDeliveryMonth, PlantKey) %>%
+  summarise(Quantity = sum(Quantity)) %>%
+  ungroup() %>%
+  mutate(RequestedDeliveryMonth = as.character(RequestedDeliveryMonth)) # Ensure RequestedDeliveryMonth is character
+
+
+# Plotting sales data for each PlantKey separately
+sales_plots <- lapply(unique(grouped_data_sales$PlantKey), function(plant) {
+  data <- grouped_data_sales[grouped_data_sales$PlantKey == plant, ]
+  ggplot(data, aes(x = YearMonth, y = OrderQuantity)) +
+    geom_point(aes(color = factor(MaterialKey)), show.legend = FALSE) +  # Remove legend
+    labs(title = paste("Sales: Quantity per Material (",plant, ")"),
+         x = "Requested Delivery Month",
+         y = "Quantity") +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    ylim(0, 21000) +
+    scale_x_discrete(labels = function(x) {
+      every_third_index <- seq(1, length(x), by = 3)
+      ifelse(seq_along(x) %in% every_third_index, x, "")
+    })
+})
+
+
+# Plotting forecast data for each PlantKey separately
+forecast_plots <- lapply(unique(grouped_data_forecast$PlantKey), function(plant) {
+  data <- grouped_data_forecast[grouped_data_forecast$PlantKey == plant, ]
+  ggplot(data, aes(x = RequestedDeliveryMonth, y = Quantity)) +
+    geom_point(aes(color = factor(MaterialKey)), show.legend = FALSE) +  # Remove legend
+    labs(title = paste("Forecast: Quantity per Material (",plant, ")"),
+         x = "Requested Delivery Month",
+         y = "Quantity") +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+    ylim(0, 21000) +
+    scale_x_discrete(labels = function(x) {
+      every_third_index <- seq(1, length(x), by = 3)
+      ifelse(seq_along(x) %in% every_third_index, x, "")
+    })
+})
+
+# Print each set of plots separately
+for (i in seq_along(sales_plots)) {
+  print(grid.arrange(sales_plots[[i]], forecast_plots[[i]], ncol = 2))
+}
+
+```
+## inbound time by vendor
+```{r}
+ggplot(mpr, aes(x = factor(VendorKey), y = InboundTransportationTime)) +
+  geom_point( color = 'orange') +
+  labs(title = 'Inbound Transportation Time by Vendor', x = 'VendorKey') +
+  theme_minimal()
+```
+
