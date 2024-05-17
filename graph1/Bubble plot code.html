@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Bubble Plot</title>
+<style>
+    svg {
+        border: 1px;
+        border-style: solid;
+    }
+    circle.sun {
+        fill: rgb(226, 188, 17);
+        opacity: 0.1;
+    }
+    circle.base {
+        fill: rgb(92, 180, 70);
+        opacity: 0.5;
+        transition: opacity 0.3s ease-in-out; 
+        cursor: pointer; 
+    }
+    circle.base:hover {
+        fill: rgb(255, 94, 0);
+        opacity: 1;
+    }
+    circle.legend {
+        fill: rgb(129, 70, 180);
+        opacity: 0.5;
+        transition: opacity 0.3s ease-in-out; 
+    }
+    h1.underlinedtext {
+    font-family: 'Lato', sans-serif;
+    font-size: 40px;
+    text-decoration: underline;
+    }
+    text.label {
+        font-family: Arial, sans-serif;
+        font-size: 12px;
+        fill: black;
+        text-anchor: middle;
+        dominant-baseline: middle;
+    }
+    text.grand-label {
+        font-family: Arial, sans-serif;
+        font-size: 20px;
+        fill: black;
+        font-weight: bold;
+        text-decoration: underline;
+        text-anchor: middle;
+        dominant-baseline: bottom;
+        transform: translateY(-10px);
+    }
+    text.legend {
+        font-family: Arial, sans-serif;
+        font-size: 30px;
+        fill: black;
+        font-weight: bold;
+        text-decoration: underline;
+        text-anchor: middle;
+        dominant-baseline: bottom;
+    }
+    text.legend-descr {
+        font-family: Arial, sans-serif;
+        font-size: 15px;
+        fill: black;
+        font-weight: bold;
+        text-anchor: middle;
+        dominant-baseline: bottom;
+    }
+    .image-overlay {
+        display: none;
+    }
+</style>
+
+<h1 class="underlined.text">Repartition of Countries per plant and their importance in terms of customers</h1>
+
+</head>
+<body>
+    
+<svg width="3000" height="2000"> 
+    
+    <circle cx="430" cy="430" r="400" class="sun"/>
+    <text x="600" y="50" class="grand-label">PLANT 4</text>
+
+    <circle cx="200" cy="200" r="60" class="base" onclick="toggleImage('BEdelay1.png', 'BEdelay2.png', 'BE')"/>
+    <text x="200" y="200" class="label">BE</text>
+    <image id="BEdelay1.png" class="image-overlay" xlink:href="BEdelay1.png" width="1200" height="1200" x="1700" y="400"/>
+    <image id="BEdelay2.png" class="image-overlay" xlink:href="BEdelay2.png" width="1200" height="1200" x="1700" y="400"/>
+    
+    <circle cx="480" cy="480" r="310" class="base" onclick="toggleImage('GEdelay1.png', 'GEdelay2.png', 'GE')"/>
+    <text x="480" y="480" class="label">GE</text>
+    <image id="GEdelay1.png" class="image-overlay" xlink:href="GEdelay1.png" width="1200" height="1200" x="1700" y="400"/>
+    <image id="GEdelay2.png" class="image-overlay" xlink:href="GEdelay2.png" width="1200" height="1200" x="1700" y="400"/>
+    
+    <circle cx="400" cy="100" r="30" class="base" onclick="toggleImage('NLdelay1.png', 'NLdelay2.png', 'NL')"/>
+    <text x="400" y="100" class="label">NL</text> 
+    <image id="NLdelay1.png" class="image-overlay" xlink:href="NLdelay1.png" width="1200" height="1200" x="1700" y="400"/>
+    <image id="NLdelay2.png" class="image-overlay" xlink:href="NLdelay2.png" width="1200" height="1200" x="1700" y="400"/>
+    
+    <circle cx="900" cy="900" r="200" class="sun"/>
+    <text x="1050" y="720" class="grand-label">PLANT 5</text> 
+
+    <circle cx="900" cy="1000" r="100" class="base" onclick="toggleImage('CZdelay1.png', 'CZdelay2.png', 'CZ')"/>
+    <text x="900" y="1000" class="label">CZ</text> 
+    <image id="CZdelay1.png" class="image-overlay" xlink:href="CZdelay1.png" width="1200" height="1200" x="1700" y="400"/>
+    <image id="CZdelay2.png" class="image-overlay" xlink:href="CZdelay2.png" width="1200" height="1200" x="1700" y="400"/>
+    
+    <circle cx="770" cy="870" r="70" class="base" onclick="toggleImage('GRdelay1.png', 'GRdelay2.png', 'GR')"/>
+    <text x="770" y="870" class="label">GR</text> 
+    <image id="GRdelay1.png" class="image-overlay" xlink:href="GRdelay1.png" width="1200" height="1200" x="1700" y="400"/>
+    <image id="GRdelay2.png" class="image-overlay" xlink:href="GRdelay2.png" width="1200" height="1200" x="1700" y="400"/>
+    
+    <circle cx="1050" cy="900" r="20" class="base" onclick="toggleImage('HUdelay1.png', 'HUdelay2.png', 'HU')"/>
+    <text x="1050" y="900" class="label">HU</text> 
+    <image id="HUdelay1.png" class="image-overlay" xlink:href="HUdelay1.png" width="1200" height="1200" x="1700" y="400"/>
+    <image id="HUdelay2.png" class="image-overlay" xlink:href="HUdelay2.png" width="1200" height="1200" x="1700" y="400"/>
+    
+    <circle cx="920" cy="800" r="90" class="base" onclick="toggleImage('PLdelay1.png', 'PLdelay2.png', 'PL')"/>
+    <text x="920" y="800" class="label">PL</text> 
+    <image id="PLdelay1.png" class="image-overlay" xlink:href="PLdelay1.png" width="1000" height="1000" x="1700" y="400"/>
+    <image id="PLdelay2.png" class="image-overlay" xlink:href="PLdelay2.png" width="1200" height="1200" x="1700" y="400"/>
+
+
+    <circle cx="1400" cy="700" r="200" class="sun"/>
+    <text x="1600" y="580" class="grand-label">PLANT 6</text> 
+
+    <circle cx="1280" cy="800" r="20" class="base" onclick="toggleImage('ITdelay1.png', 'ITdelay2.png', 'IT')"/>
+    <text x="1280" y="800" class="label">IT</text> 
+    <image id="ITdelay1.png" class="image-overlay" xlink:href="ITdelay1.png" width="1200" height="1200" x="1700" y="400"/>
+    <image id="ITdelay2.png" class="image-overlay" xlink:href="ITdelay2.png" width="1200" height="1200" x="1700" y="400"/>
+
+    <circle cx="1250" cy="750" r="20" class="base" onclick="toggleImage('SPdelay1.png', 'SPdelay2.png', 'SP')"/>
+    <text x="1250" y="750" class="label">SP</text> 
+    <image id="SPdelay1.png" class="image-overlay" xlink:href="SPdelay1.png" width="1200" height="1200" x="1700" y="400"/>
+    <image id="SPdelay2.png" class="image-overlay" xlink:href="SPdelay2.png" width="1200" height="1200" x="1700" y="400"/>
+
+    <circle cx="1310" cy="830" r="15" class="base" onclick="toggleImage('CHdelay1.png', 'CHdelay2.png', 'CH')"/>
+    <text x="1310" y="830" class="label">CH</text> 
+    <image id="CHdelay1.png" class="image-overlay" xlink:href="CHdelay1.png" width="1000" height="1000" x="1700" y="400"/>
+    <image id="CHdelay2.png" class="image-overlay" xlink:href="CHdelay2.png" width="1000" height="1000" x="1700" y="400"/>
+
+    <circle cx="1450" cy="550" r="30" class="base" onclick="toggleImage('SLdelay1.png', 'SLdelay2.png', 'SL')"/>
+    <text x="1450" y="550" class="label">SL</text> 
+    <image id="SLdelay1.png" class="image-overlay" xlink:href="SLdelay1.png" width="1000" height="1000" x="1700" y="400"/>
+    <image id="SLdelay2.png" class="image-overlay" xlink:href="SLdelay2.png" width="1000" height="1000" x="1700" y="400"/>
+
+    <circle cx="1370" cy="550" r="40" class="base" onclick="toggleImage('HRdelay1.png', 'HRdelay2.png', 'HR')"/>
+    <text x="1370" y="550" class="label">HR</text> 
+    <image id="HRdelay1.png" class="image-overlay" xlink:href="HRdelay1.png" width="1200" height="1200" x="1700" y="400"/>
+    <image id="HRdelay2.png" class="image-overlay" xlink:href="HRdelay2.png" width="1200" height="1200" x="1700" y="400"/>
+
+    <circle cx="1280" cy="630" r="70" class="base" onclick="toggleImage('PTdelay1.png', 'PTdelay2.png', 'PT')"/>
+    <text x="1280" y="630" class="label">PT</text> 
+    <image id="PTdelay1.png" class="image-overlay" xlink:href="PTdelay1.png" width="1200" height="1200" x="1700" y="400"/>
+    <image id="PTdelay2.png" class="image-overlay" xlink:href="PTdelay2.png" width="1200" height="1200" x="1700" y="400"/>
+
+    <circle cx="1460" cy="740" r="140" class="base" onclick="toggleImage('FRdelay1.png', 'FRdelay2.png', 'FR')"/>
+    <text x="1460" y="740" class="label">FR</text>
+    <image id="FRdelay1.png" class="image-overlay" xlink:href="FRdelay1.png" width="1200" height="1200" x="1700" y="400"/>
+    <image id="FRdelay2.png" class="image-overlay" xlink:href="FRdelay2.png" width="1200" height="1200" x="1700" y="400"/>
+
+
+    <circle cx="1000" cy="200" r="40" class="sun"/>
+    <text x="1070" y="180" class="grand-label">PLANT 7</text> 
+    
+    <circle cx="1000" cy="200" r="20" class="base" onclick="toggleImage('UKdelay1.png', 'UKdelay2.png', 'UK')"/>
+    <text x="1000" y="200" class="label">UK</text> 
+    <image id="UKdelay1.png" class="image-overlay" xlink:href="UKdelay1.png" width="1200" height="1200" x="1700" y="400"/>
+    <image id="UKdelay2.png" class="image-overlay" xlink:href="UKdelay2.png" width="1200" height="1200" x="1700" y="400"/>
+
+
+    <circle cx="1500" cy="250" r="200" class="sun"/>
+    <text x="1650" y="80" class="grand-label">PLANT 8</text> 
+
+    <circle cx="1450" cy="100" r="15" class="base" onclick="toggleImage('DKdelay1.png', 'DKdelay2.png', 'DK')"/>
+    <text x="1450" y="100" class="label">DK</text> 
+    <image id="DKdelay1.png" class="image-overlay" xlink:href="DKdelay1.png" width="1200" height="1200" x="1700" y="400"/>
+    <image id="DKdelay2.png" class="image-overlay" xlink:href="DKdelay2.png" width="1200" height="1200" x="1700" y="400"/>
+
+    <circle cx="1600" cy="120" r="20" class="base" onclick="toggleImage('EEdelay1.png', 'EEdelay2.png', 'EE')"/>
+    <text x="1600" y="120" class="label">EE</text> 
+    <image id="EEdelay1.png" class="image-overlay" xlink:href="EEdelay1.png" width="1200" height="1200" x="1700" y="400"/>
+    <image id="EEdelay2.png" class="image-overlay" xlink:href="EEdelay2.png" width="1200" height="1200" x="1700" y="400"/>
+
+    <circle cx="1355" cy="180" r="35" class="base" onclick="toggleImage('FINdelay1.png', 'FINdelay2.png', 'FIN')"/>
+    <text x="1355" y="180" class="label">FIN</text> 
+    <image id="FINdelay1.png" class="image-overlay" xlink:href="FINdelay1.png" width="1200" height="1200" x="1700" y="400"/>
+    <image id="FINdelay2.png" class="image-overlay" xlink:href="FINdelay2.png" width="1200" height="1200" x="1700" y="400"/>
+
+    <circle cx="1550" cy="100" r="15" class="base" onclick="toggleImage('LVdelay1.png', 'LVdelay2.png', 'LV')"/>
+    <text x="1550" y="100" class="label">LV</text> 
+    <image id="LVdelay1.png" class="image-overlay" xlink:href="LVdelay1.png" width="1200" height="1200" x="1700" y="400"/>
+    <image id="LVdelay2.png" class="image-overlay" xlink:href="LVdelay2.png" width="1200" height="1200" x="1700" y="400"/>
+
+    <circle cx="1400" cy="120" r="20" class="base" onclick="toggleImage('LTdelay1.png', 'LTdelay2.png', 'LT')"/>
+    <text x="1400" y="120" class="label">LT</text> 
+    <image id="LTdelay1.png" class="image-overlay" xlink:href="LTdelay1.png" width="1200" height="1200" x="1700" y="400"/>
+    <image id="LTdelay2.png" class="image-overlay" xlink:href="LTdelay2.png" width="1200" height="1200" x="1700" y="400"/>
+
+    <circle cx="1500" cy="100" r="30" class="base" onclick="toggleImage('NRdelay1.png', 'NRdelay2.png', 'NR')"/>
+    <text x="1500" y="100" class="label">NR</text> 
+    <image id="NRdelay1.png" class="image-overlay" xlink:href="NRdelay1.png" width="1200" height="1200" x="1700" y="400"/>
+    <image id="NRdelay2.png" class="image-overlay" xlink:href="NRdelay2.png" width="1200" height="1200" x="1700" y="400"/>
+
+    <circle cx="1500" cy="300" r="150" class="base" onclick="toggleImage('SEdelay1.png', 'SEdelay2.png', 'BE')"/>
+    <text x="1500" y="300" class="label">SE</text> 
+    <image id="SEdelay1.png" class="image-overlay" xlink:href="SEdelay1.png" width="1200" height="1200" x="1700" y="400"/>
+    <image id="SEdelay2.png" class="image-overlay" xlink:href="SEdelay2.png" width="1200" height="1200" x="1700" y="400"/>
+
+
+
+
+    <text x="2500" y="50" class="legend">Legend</text>
+    <circle cx="2300" cy="100" r="20" class="sun"/>
+    <text x="2450" y="100" class="legend-descr">Plants</text> 
+
+    <circle cx="2300" cy="150" r="20" class="base"/>
+    <text x="2450" y="150" class="legend-descr">Customer Countries per plant</text>
+    
+    <circle cx="2300" cy="200" r="20" class="legend" onclick="toggleImage('Scaling1.png', 'Scaling2.png', 'Scaling')"/>
+    <text x="2450" y="200" class="legend-descr">Scaling of the circles</text>
+    <image id="Scaling1.png" class="image-overlay" xlink:href="Scaling1.png" width="1200" height="1200" x="1700" y="400"/>
+    <image id="Scaling2.png" class="image-overlay" xlink:href="Scaling2.png" width="1200" height="1200" x="1700" y="400"/>
+    <text x="2450" y="230" class="legend-descr">(click on the purple circle)</text>
+    
+</svg>
+
+<script>
+
+var clickCounts = {
+    'BE': 0,
+    'GE': 0,
+    'NL': 0, 
+    'CZ': 0,
+    'GR': 0,
+    'HU': 0,
+    'PL': 0,
+    'IT': 0,
+    'SP': 0,
+    'CH': 0,
+    'FR': 0,
+    'PT': 0,
+    'SL': 0,
+    'HR': 0,
+    'UK': 0,
+    'DK': 0, 
+    'EE': 0,
+    'FIN': 0,
+    'LV': 0,
+    'LT': 0,
+    'NR': 0,
+    'SE': 0,
+    'Scaling': 0
+
+};
+
+function toggleImage(imageId1, imageId2, circle) {
+    var image1 = document.getElementById(imageId1);
+    var image2 = document.getElementById(imageId2);
+    
+    // Increment click count for the current circle
+    clickCounts[circle]++;
+    
+    // Toggle display based on click count
+    if (clickCounts[circle] === 1) {
+        image1.style.display = "block";
+        image2.style.display = "none";
+
+    } else if (clickCounts[circle] === 2) {
+        image1.style.display = "none";
+        image2.style.display = "block";
+
+    } else if (clickCounts[circle] === 3) {
+        image1.style.display = "none";
+        image2.style.display = "none";
+        // Reset click count to 0
+        clickCounts[circle] = 0;
+    }
+}
+</script>
+
+<a x ="2400" y="400" href="test.docx">View Word Document</a>
+
+</body>
+</html>
